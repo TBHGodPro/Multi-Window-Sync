@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    // "esModuleInterop": true,
+    // "allowSyntheticDefaultImports": true,
+    // "strict": true,
+    // "noImplicitAny": true,
+    "declaration": false,
+    "sourceMap": false,
+    "declarationMap": false,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["@types/node", "./src/renderer/index.d.ts"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

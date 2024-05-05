@@ -1,0 +1,24 @@
+html {
+  background-color: #06031290;
+  /* background-color: #060312; */
+  overflow: hidden;
+}
+
+#fullscreen {
+  width: 100vw;
+  height: 100vh;
+  -webkit-app-region: drag;
+}
+
+.line {
+  padding: 0px;
+  margin: 0px;
+  height: 5px;
+  background-color: green;
+  line-height: 1px;
+  position: absolute;
+  border-radius: 50px;
+  margin-left: 50vw;
+  margin-top: 50vh;
+  /* transition: all 0.025s ease; */
+}
