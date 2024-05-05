@@ -1,6 +1,6 @@
 import { WS_HOST, WS_PORT } from '../../constants';
 import { Position } from '../../types';
-import BufferWebSocketUtil from '../util/BufferWebSocket';
+import BufferUtil from '../util/Buffer';
 import Client from './Client';
 import { WebSocket } from 'ws';
 
@@ -17,7 +17,7 @@ export default class BufferWebSocketClient extends Client {
     });
 
     this.socket.on('message', raw => {
-      const data = BufferWebSocketUtil.read(raw as Buffer);
+      const data = BufferUtil.read(raw as Buffer);
 
       switch (data.op) {
         case 'position': {
@@ -47,7 +47,7 @@ export default class BufferWebSocketClient extends Client {
   }
 
   public sendMove(pos: Position): void {
-    const packet = BufferWebSocketUtil.writePosition(this.id, pos);
+    const packet = BufferUtil.writePosition(this.id, pos);
     if (this.socket?.readyState === WebSocket.OPEN && this.queue.length === 0) this.socket.send(packet);
     else this.queue.push(packet);
   }

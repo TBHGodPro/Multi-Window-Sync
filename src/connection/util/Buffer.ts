@@ -1,6 +1,6 @@
 import { Position } from '../../types';
 
-export default class BufferWebSocketUtil {
+export default class BufferUtil {
   public static writePosition(id: number, pos: Position): Buffer {
     const buf = Buffer.alloc(5);
     buf.writeInt8(id, 0);

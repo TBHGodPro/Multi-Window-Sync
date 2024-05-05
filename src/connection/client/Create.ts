@@ -4,6 +4,7 @@ import Client from './Client';
 import IPCClient from './IPCClient';
 import WebSocketClient from './WebSocketClient';
 import BufferWebSocketClient from './BufferWebSocketClient';
+import WSSClient from './WSSClient';
 
 export default function createClient(type: ConnectionType, window: BrowserWindow): Client {
   switch (type) {
@@ -15,5 +16,8 @@ export default function createClient(type: ConnectionType, window: BrowserWindow
 
     case ConnectionType.BufferWebSocket:
       return new BufferWebSocketClient(window);
+
+    case ConnectionType.WSS:
+      return new WSSClient(window);
   }
 }

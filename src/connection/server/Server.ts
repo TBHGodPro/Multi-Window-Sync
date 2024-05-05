@@ -15,13 +15,13 @@ export default abstract class Server {
   public addWindow(window: BrowserWindow): number {
     const id = window.webContents.getProcessId();
 
+    this.supplyWindow(window);
+
     if (!this.windows.has(id) || this.windows.get(id).win !== window)
       this.windows.set(id, {
         win: window,
         id,
       });
-
-    this.supplyWindow(window);
 
     return id;
   }

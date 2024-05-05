@@ -2,7 +2,7 @@ import { Position } from '../../types';
 import Server from './Server';
 import { WebSocketServer as WSS, WebSocket } from 'ws';
 import { WS_HOST, WS_PORT } from '../../constants';
-import BufferWebSocketUtil from '../util/BufferWebSocket';
+import BufferUtil from '../util/Buffer';
 
 export default class BufferWebSocketServer extends Server {
   public server: WSS;
@@ -30,10 +30,10 @@ export default class BufferWebSocketServer extends Server {
       this.sockets.set(id, socket);
 
       socket.on('message', raw => {
-        // const data = BufferWebSocketUtil.readMiniPosition(raw as Buffer);
+        // const data = BufferUtil.readMiniPosition(raw as Buffer);
 
         this.windows.forEach(win => {
-          if (win.id !== id) this.sockets.get(win.id)?.send(/*BufferWebSocketUtil.writePosition(id, data.pos)*/ raw);
+          if (win.id !== id) this.sockets.get(win.id)?.send(/*BufferUtil.writePosition(id, data.pos)*/ raw);
         });
       });
 
@@ -55,7 +55,7 @@ export default class BufferWebSocketServer extends Server {
         const size = win.win.getSize();
 
         socket.send(
-          BufferWebSocketUtil.writePosition(win.id, {
+          BufferUtil.writePosition(win.id, {
             x: pos[0] + size[0] / 2,
             y: pos[1] + size[1] / 2,
           })
@@ -68,7 +68,7 @@ export default class BufferWebSocketServer extends Server {
   public sendFrom(id: number, op: 'delete'): void;
   public sendFrom(id: number, op: 'position' | 'delete', data?: Position): void {
     this.windows.forEach(win => {
-      if (win.id != id) this.sockets.get(win.id).send(op === 'position' ? BufferWebSocketUtil.writePosition(id, data) : BufferWebSocketUtil.writeDelete(id));
+      if (win.id != id) this.sockets.get(win.id).send(op === 'position' ? BufferUtil.writePosition(id, data) : BufferUtil.writeDelete(id));
     });
   }
 
