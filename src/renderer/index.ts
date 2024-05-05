@@ -16,58 +16,44 @@ function connect(x: number, y: number, div: HTMLElement) {
   div.style.transform = 'rotate(' + angle + 'deg)';
 }
 
-(async () => {
-  let pos: { x: number; y: number } = { x: 0, y: 0 };
+let pos: { x: number; y: number } = { x: 0, y: 0 };
 
-  const positions: Map<
-    number,
-    {
-      pos: { x: number; y: number };
-      el: HTMLElement;
-    }
-  > = new Map();
+const positions: Map<
+  number,
+  {
+    pos: { x: number; y: number };
+    el: HTMLElement;
+  }
+> = new Map();
 
-  window.ipc.onPosition((id, winPos) => {
-    let div: HTMLElement;
-    if (!positions.has(id)) {
-      div = document.createElement('div');
-      div.className = 'line';
-      document.body.appendChild(div);
-      positions.set(id, {
-        pos: winPos,
-        el: div,
-      });
-    } else {
-      const win = positions.get(id);
-      div = win.el;
-      win.pos = winPos;
-    }
-
-    connect(winPos.x - pos.x, winPos.y - pos.y, div);
-  });
-
-  window.ipc.onRemove(id => {
-    positions.get(id)?.el?.remove();
-    positions.delete(id);
-  });
-
-  window.electronWindow.onMove(newPos => {
-    pos = newPos;
-
-    positions.forEach(win => {
-      connect(win.pos.x - pos.x, win.pos.y - pos.y, win.el);
+window.ipc.onPosition((id, winPos) => {
+  let div: HTMLElement;
+  if (!positions.has(id)) {
+    div = document.createElement('div');
+    div.className = 'line';
+    document.body.appendChild(div);
+    positions.set(id, {
+      pos: winPos,
+      el: div,
     });
+  } else {
+    const win = positions.get(id);
+    div = win.el;
+    win.pos = winPos;
+  }
+
+  connect(winPos.x - pos.x, winPos.y - pos.y, div);
+});
+
+window.ipc.onRemove(id => {
+  positions.get(id)?.el?.remove();
+  positions.delete(id);
+});
+
+window.electronWindow.onMove(newPos => {
+  pos = newPos;
+
+  positions.forEach(win => {
+    connect(win.pos.x - pos.x, win.pos.y - pos.y, win.el);
   });
-
-  // while (true) {
-  //   await new Promise(res => setTimeout(res, 0));
-
-  //   const pos = window.electronWindow.getPosition();
-  //   const size = window.electronWindow.getSize();
-
-  //   x = pos[0] + size[0] / 2;
-  //   y = pos[1] + size[1] / 2;
-
-  //   window.ipc.sendPos({ x, y });
-  // }
-})();
+});

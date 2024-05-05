@@ -47,7 +47,7 @@ export default class BufferWebSocketClient extends Client {
   }
 
   public sendMove(pos: Position): void {
-    const packet = BufferWebSocketUtil.writeMiniPosition(pos);
+    const packet = BufferWebSocketUtil.writePosition(this.id, pos);
     if (this.socket?.readyState === WebSocket.OPEN && this.queue.length === 0) this.socket.send(packet);
     else this.queue.push(packet);
   }

@@ -2,7 +2,6 @@ import { app, BrowserWindow, screen } from 'electron';
 import { resolve } from 'path';
 import { initialize, enable } from '@electron/remote/main';
 import Server from '../connection/server/Server';
-import IPCServer from '../connection/server/IPCServer';
 import { CONNECTION_TYPE } from '../constants';
 import createServer from '../connection/server/Create';
 

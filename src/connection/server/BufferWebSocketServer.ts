@@ -30,10 +30,10 @@ export default class BufferWebSocketServer extends Server {
       this.sockets.set(id, socket);
 
       socket.on('message', raw => {
-        const data = BufferWebSocketUtil.readMiniPosition(raw as Buffer);
+        // const data = BufferWebSocketUtil.readMiniPosition(raw as Buffer);
 
         this.windows.forEach(win => {
-          if (win.id !== id) this.sockets.get(win.id)?.send(BufferWebSocketUtil.writePosition(id, data.pos));
+          if (win.id !== id) this.sockets.get(win.id)?.send(/*BufferWebSocketUtil.writePosition(id, data.pos)*/ raw);
         });
       });
 

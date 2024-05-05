@@ -1,9 +1,7 @@
-import { contextBridge, ipcRenderer } from 'electron/renderer';
+import { contextBridge } from 'electron/renderer';
 import * as remote from '@electron/remote';
-import { WebSocket } from 'ws';
-import { CONNECTION_TYPE, WS_HOST, WS_PORT } from '../constants';
+import { CONNECTION_TYPE } from '../constants';
 import Client from '../connection/client/Client';
-import IPCClient from '../connection/client/IPCClient';
 import { Position } from '../types';
 import createClient from '../connection/client/Create';
 
