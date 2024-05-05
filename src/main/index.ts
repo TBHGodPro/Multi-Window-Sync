@@ -55,7 +55,8 @@ async function createWindow(): Promise<BrowserWindow> {
 }
 
 app.on('ready', async () => {
-  await Promise.all([createWindow(), createWindow()]);
+  await createWindow();
+  await createWindow();
 });
 
 app.on('activate', async () => {

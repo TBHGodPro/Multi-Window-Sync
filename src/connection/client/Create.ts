@@ -5,6 +5,7 @@ import IPCClient from './IPCClient';
 import WebSocketClient from './WebSocketClient';
 import BufferWebSocketClient from './BufferWebSocketClient';
 import WSSClient from './WSSClient';
+import WSS2Client from './WSS2Client';
 
 export default function createClient(type: ConnectionType, window: BrowserWindow): Client {
   switch (type) {
@@ -19,5 +20,8 @@ export default function createClient(type: ConnectionType, window: BrowserWindow
 
     case ConnectionType.WSS:
       return new WSSClient(window);
+
+    case ConnectionType.WSS2:
+      return new WSS2Client(window);
   }
 }
