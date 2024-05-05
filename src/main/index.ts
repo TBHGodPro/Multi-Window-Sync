@@ -20,6 +20,7 @@ async function createWindow(): Promise<BrowserWindow> {
         contextIsolation: true,
         preload: resolve(__dirname, './preload.js'),
         devTools: true,
+        backgroundThrottling: true,
       },
       transparent: true,
     });
@@ -30,6 +31,14 @@ async function createWindow(): Promise<BrowserWindow> {
       id = window.webContents.getProcessId();
       setTimeout(() => {
         window.show();
+        windows.forEach(win => {
+          const pos = win.getPosition();
+          const size = win.getSize();
+          window.webContents.send('position', win.webContents.getProcessId(), {
+            x: pos[0] + size[0] / 2,
+            y: pos[1] + size[1] / 2,
+          });
+        });
         windows.push(window);
         res(window);
       }, 150);

@@ -1,13 +1,10 @@
-const lineColor = 'green';
-const lineThickness = 5;
-
 function connect(x: number, y: number, div: HTMLElement) {
   // distance
   const length = Math.sqrt(x * x + y * y);
 
   // center
   const cx = x / 2 - length / 2;
-  const cy = y / 2 - lineThickness / 2;
+  const cy = y / 2;
 
   // angle
   const angle = Math.atan2(-y, -x) * (180 / Math.PI);
@@ -20,10 +17,15 @@ function connect(x: number, y: number, div: HTMLElement) {
 }
 
 (async () => {
-  let x = 0;
-  let y = 0;
+  let pos: { x: number; y: number } = { x: 0, y: 0 };
 
-  const positions: Map<number, HTMLElement> = new Map();
+  const positions: Map<
+    number,
+    {
+      pos: { x: number; y: number };
+      el: HTMLElement;
+    }
+  > = new Map();
 
   window.ipc.onPosition((id, winPos) => {
     let div: HTMLElement;
@@ -31,32 +33,41 @@ function connect(x: number, y: number, div: HTMLElement) {
       div = document.createElement('div');
       div.className = 'line';
       document.body.appendChild(div);
-      positions.set(id, div);
-    } else div = positions.get(id);
+      positions.set(id, {
+        pos: winPos,
+        el: div,
+      });
+    } else {
+      const win =  positions.get(id);
+      div = win.el;
+      win.pos = winPos;
+    }
 
-    const pos = window.electronWindow.getPosition();
-    const size = window.electronWindow.getSize();
-
-    x = pos[0] + size[0] / 2;
-    y = pos[1] + size[1] / 2;
-
-    connect(winPos.x - x, winPos.y - y, div);
+    connect(winPos.x - pos.x, winPos.y - pos.y, div);
   });
 
   window.ipc.onRemove(id => {
-    positions.get(id)?.remove();
+    positions.get(id)?.el?.remove();
     positions.delete(id);
   });
 
-  while (true) {
-    await new Promise(res => setTimeout(res, 0));
+  window.electronWindow.onMove(newPos => {
+    pos = newPos;
 
-    const pos = window.electronWindow.getPosition();
-    const size = window.electronWindow.getSize();
+    positions.forEach(win => {
+      connect(win.pos.x - pos.x, win.pos.y - pos.y, win.el);
+    });
+  });
 
-    x = pos[0] + size[0] / 2;
-    y = pos[1] + size[1] / 2;
+  // while (true) {
+  //   await new Promise(res => setTimeout(res, 0));
 
-    window.ipc.sendPos({ x, y });
-  }
+  //   const pos = window.electronWindow.getPosition();
+  //   const size = window.electronWindow.getSize();
+
+  //   x = pos[0] + size[0] / 2;
+  //   y = pos[1] + size[1] / 2;
+
+  //   window.ipc.sendPos({ x, y });
+  // }
 })();
