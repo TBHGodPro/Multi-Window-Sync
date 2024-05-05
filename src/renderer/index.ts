@@ -38,7 +38,7 @@ function connect(x: number, y: number, div: HTMLElement) {
         el: div,
       });
     } else {
-      const win =  positions.get(id);
+      const win = positions.get(id);
       div = win.el;
       win.pos = winPos;
     }
@@ -47,6 +47,7 @@ function connect(x: number, y: number, div: HTMLElement) {
   });
 
   window.ipc.onRemove(id => {
+    console.log(id);
     positions.get(id)?.el?.remove();
     positions.delete(id);
   });

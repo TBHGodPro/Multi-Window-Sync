@@ -1,19 +1,19 @@
 import { contextBridge, ipcRenderer } from 'electron/renderer';
 import * as remote from '@electron/remote';
 import { WebSocket } from 'ws';
-import { WS_HOST, WS_PORT } from '../constants';
+import { CONNECTION_TYPE, WS_HOST, WS_PORT } from '../constants';
+import Client from '../connection/client/Client';
+import IPCClient from '../connection/client/IPCClient';
+import { Position } from '../types';
+import createClient from '../connection/client/Create';
 
-let onMoveFunc: (position: { x: number; y: number }) => void = () => {};
+let onMoveFunc: (position: Position) => void = () => {};
 
 const window = remote.getCurrentWindow();
 
-const socket = new WebSocket(`http://${WS_HOST}:${WS_PORT}/`, {
-  headers: {
-    id: window.webContents.getProcessId(),
-  },
-});
+const client: Client = createClient(CONNECTION_TYPE, window);
 
-const queue: string[] = [];
+client.init();
 
 const updateWinPos = () => {
   const pos = window.getPosition();
@@ -25,9 +25,7 @@ const updateWinPos = () => {
   };
 
   onMoveFunc(posVal);
-  const packet = JSON.stringify(posVal);
-  if (socket.readyState == WebSocket.OPEN) socket.send(packet);
-  else queue.push(packet);
+  client.sendMove(posVal);
 };
 
 window.on('move', updateWinPos);
@@ -39,44 +37,17 @@ window.on('resized', updateWinPos);
 window.on('will-move', updateWinPos);
 window.on('will-resize', updateWinPos);
 
-let onPositionFunc: (id: number, position: { x: number; y: number }) => void = () => {};
-let onRemoveFunc: (id: number) => void = () => {};
-
-socket.on('message', raw => {
-  const data = JSON.parse(raw.toString());
-
-  console.log(data);
-
-  switch (data.op) {
-    case 'position': {
-      onPositionFunc(data.id, data.data);
-      break;
-    }
-
-    case 'delete': {
-      onRemoveFunc(data.id);
-      break;
-    }
-  }
-});
-
 contextBridge.exposeInMainWorld('ipc', {
-  onPosition: (cb: (id: number, position: { x: number; y: number }) => void) => {
-    onPositionFunc = cb;
+  onPosition: (cb: (id: number, position: Position) => void) => {
+    client.onPosition(cb);
   },
   onRemove: (cb: (id: number) => void) => {
-    onRemoveFunc = cb;
+    client.onDelete(cb);
   },
 });
 contextBridge.exposeInMainWorld('electronWindow', {
-  onMove: (cb: (position: { x: number; y: number }) => void) => {
+  onMove: (cb: (position: Position) => void) => {
     onMoveFunc = cb as any;
     updateWinPos();
   },
 });
-
-socket.on('open', () => {
-  console.log('Socket Open');
-  for (const packet of queue) socket.send(packet);
-});
-socket.on('close', code => console.log('Socket Closed (' + code + ')'));
