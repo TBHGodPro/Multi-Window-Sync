@@ -13,27 +13,34 @@ const client: Client = createClient(CONNECTION_TYPE, window);
 
 client.init();
 
-const updateWinPos = () => {
+const getPosition = () => {
   const pos = window.getPosition();
   const size = window.getSize();
 
-  const posVal = {
+  return {
     x: pos[0] + size[0] / 2,
     y: pos[1] + size[1] / 2,
   };
-
-  onMoveFunc(posVal);
-  client.sendMove(posVal);
 };
 
-window.on('move', updateWinPos);
-window.on('resize', updateWinPos);
+let lastPos: Position = getPosition();
+const updateWinPos = (pos?: Position) => {
+  if (!pos) pos = getPosition();
+  if (pos === lastPos) return;
+  lastPos = pos;
 
-window.on('moved', updateWinPos);
-window.on('resized', updateWinPos);
+  onMoveFunc(pos);
+  client.sendMove(pos);
+};
 
-window.on('will-move', updateWinPos);
-window.on('will-resize', updateWinPos);
+// window.on('move', updateWinPos);
+// window.on('resize', updateWinPos);
+
+// window.on('moved', updateWinPos);
+// window.on('resized', updateWinPos);
+
+// window.on('will-move', updateWinPos as any);
+// window.on('will-resize', updateWinPos as any);
 
 contextBridge.exposeInMainWorld('ipc', {
   onPosition: (cb: (id: number, position: Position) => void) => {
@@ -48,4 +55,6 @@ contextBridge.exposeInMainWorld('electronWindow', {
     onMoveFunc = cb as any;
     updateWinPos();
   },
+  getPosition,
+  update: updateWinPos,
 });

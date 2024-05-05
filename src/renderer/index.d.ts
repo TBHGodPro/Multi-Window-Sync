@@ -1,3 +1,5 @@
+import { Position } from '../types';
+
 export {};
 
 declare global {
@@ -8,6 +10,8 @@ declare global {
     };
     electronWindow: {
       onMove: (cb: (position: { x: number; y: number }) => void) => void;
+      getPosition: () => Position;
+      update: (pos?: Position) => void;
     };
   }
 }

@@ -57,3 +57,12 @@ window.electronWindow.onMove(newPos => {
     connect(win.pos.x - pos.x, win.pos.y - pos.y, win.el);
   });
 });
+
+setInterval(() => {
+  const newPos = window.electronWindow.getPosition();
+
+  if (pos.x !== newPos.x || pos.y !== newPos.y) {
+    pos = newPos;
+    window.electronWindow.update(pos);
+  }
+});
