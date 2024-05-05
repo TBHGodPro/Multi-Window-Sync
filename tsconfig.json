@@ -10,7 +10,7 @@
     "declarationMap": false,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["@types/node", "./src/renderer/index.d.ts"]
+    "types": ["./src/renderer/index.d.ts"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

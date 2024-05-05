@@ -12,10 +12,12 @@
   "description": "",
   "dependencies": {
     "@electron/remote": "^2.1.2",
-    "electron": "^30.0.2"
+    "electron": "^30.0.2",
+    "ws": "^8.17.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.8",
+    "@types/ws": "^8.5.10",
     "typescript": "^5.4.5"
   }
 }
