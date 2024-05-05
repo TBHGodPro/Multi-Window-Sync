@@ -1,6 +1,6 @@
 {
   "name": "multi-window-sync",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "main": "dist/main/index.js",
   "scripts": {
     "build": "tsc",
