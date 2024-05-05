@@ -73,8 +73,9 @@ export default class BufferWebSocketServer extends Server {
   }
 
   public close(id: number): void {
-    this.sendFrom(id, 'delete');
     this.sockets.get(id).close(4000);
+    this.sendFrom(id, 'delete');
+    this.sockets.get(id).terminate();
     this.sockets.delete(id);
     this.windows.delete(id);
   }
