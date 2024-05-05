@@ -6,4 +6,5 @@ export interface Position {
 export enum ConnectionType {
   IPC,
   WebSocket,
+  BufferWebSocket
 }

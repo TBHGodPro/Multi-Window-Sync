@@ -47,7 +47,6 @@ function connect(x: number, y: number, div: HTMLElement) {
   });
 
   window.ipc.onRemove(id => {
-    console.log(id);
     positions.get(id)?.el?.remove();
     positions.delete(id);
   });
