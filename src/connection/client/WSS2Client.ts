@@ -14,6 +14,8 @@ export default class WSS2Client extends Client {
       port: 6500 + this.id,
     });
 
+    this.server.on('listening', () => console.log('Server Listening (' + this.id + ')'));
+
     this.server.on('connection', (socket, req) => {
       const id = parseInt(req.headers['id'] as any);
       if (this.sockets.has(id)) return socket.close(4001);

@@ -71,7 +71,7 @@ export default class NetSocketClient extends Client {
       }
     });
 
-    this.server.listen(6500 + this.id, () => console.log('Server Listening'));
+    this.server.listen(6500 + this.id, () => console.log('Server Listening (' + this.id + ')'));
   }
 
   public sendMove(pos: Position): void {

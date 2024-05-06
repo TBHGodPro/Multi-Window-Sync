@@ -13,6 +13,8 @@ export default class WSSClient extends Client {
       port: 6500 + this.id,
     });
 
+    this.server.on('listening', () => console.log('Server Listening (' + this.id + ')'));
+
     this.server.on('connection', socket => {
       socket.send(BufferUtil.writeMiniPosition(this.lastPos));
     });
@@ -39,7 +41,7 @@ export default class WSSClient extends Client {
   }
 
   public sendMove(pos: Position): void {
-    if(pos === this.lastPos) return;
+    if (pos === this.lastPos) return;
     this.lastPos = pos;
     const packet = BufferUtil.writeMiniPosition(pos);
     this.server.clients.forEach(conn => conn.send(packet));
