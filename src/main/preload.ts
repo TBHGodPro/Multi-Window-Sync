@@ -25,7 +25,7 @@ const getPosition = () => {
 
 let lastPos: Position = getPosition();
 const updateWinPos = (pos?: Position) => {
-  if (!pos) pos = getPosition();
+  if (pos?.x === undefined || pos?.y === undefined) pos = getPosition();
   if (pos === lastPos) return;
   lastPos = pos;
 
@@ -33,14 +33,14 @@ const updateWinPos = (pos?: Position) => {
   client.sendMove(pos);
 };
 
-// window.on('move', updateWinPos);
-// window.on('resize', updateWinPos);
+window.on('move', updateWinPos);
+window.on('resize', updateWinPos);
 
-// window.on('moved', updateWinPos);
-// window.on('resized', updateWinPos);
+window.on('moved', updateWinPos);
+window.on('resized', updateWinPos);
 
-// window.on('will-move', updateWinPos as any);
-// window.on('will-resize', updateWinPos as any);
+window.on('will-move', updateWinPos as any);
+window.on('will-resize', updateWinPos as any);
 
 contextBridge.exposeInMainWorld('ipc', {
   onPosition: (cb: (id: number, position: Position) => void) => {
