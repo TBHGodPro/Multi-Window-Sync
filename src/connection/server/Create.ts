@@ -1,6 +1,7 @@
 import { ConnectionType } from '../../types';
 import BufferWebSocketServer from './BufferWebSocketServer';
 import IPCServer from './IPCServer';
+import NetSocketServer from './NetSocketServer';
 import Server from './Server';
 import WSS2Server from './WSS2Server';
 import WSSServer from './WSSServer';
@@ -22,5 +23,8 @@ export default function createServer(type: ConnectionType): Server {
 
     case ConnectionType.WSS2:
       return new WSS2Server();
+
+    case ConnectionType.NetSocket:
+      return new NetSocketServer();
   }
 }

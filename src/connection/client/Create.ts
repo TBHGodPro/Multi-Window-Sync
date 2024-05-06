@@ -6,6 +6,7 @@ import WebSocketClient from './WebSocketClient';
 import BufferWebSocketClient from './BufferWebSocketClient';
 import WSSClient from './WSSClient';
 import WSS2Client from './WSS2Client';
+import NetSocketClient from './NetSocketClient';
 
 export default function createClient(type: ConnectionType, window: BrowserWindow): Client {
   switch (type) {
@@ -23,5 +24,8 @@ export default function createClient(type: ConnectionType, window: BrowserWindow
 
     case ConnectionType.WSS2:
       return new WSS2Client(window);
+
+    case ConnectionType.NetSocket:
+      return new NetSocketClient(window);
   }
 }

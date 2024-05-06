@@ -14,4 +14,6 @@ export enum ConnectionType {
   WSS,
   // WebSocket Connection with Buffer Values Client to Client, newer Clients will join servers of older clients, and all sockets are multi-directionally used. Clients (only new ones) are given other clients with IPC from Main.
   WSS2,
+  // Just like WSS2, except using native net sockets rather than websockets
+  NetSocket
 }

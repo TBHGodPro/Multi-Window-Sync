@@ -18,8 +18,6 @@ export default class WSS2Client extends Client {
       const id = parseInt(req.headers['id'] as any);
       if (this.sockets.has(id)) return socket.close(4001);
 
-      socket.send(BufferUtil.writeMiniPosition(this.lastPos));
-
       this.sockets.set(id, socket);
 
       socket.on('message', raw => {
@@ -37,6 +35,8 @@ export default class WSS2Client extends Client {
 
       // socket.on('open', () => console.log(`Socket to ${id} Open (WSS)`));
       console.log(`Socket to ${id} Open (WSS)`);
+
+      socket.send(BufferUtil.writeMiniPosition(this.lastPos));
     });
 
     ipcRenderer.on('id', (event, ...ids) => {
