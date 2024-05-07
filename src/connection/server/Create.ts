@@ -1,11 +1,12 @@
 import { ConnectionType } from '../../types';
-import BufferWebSocketServer from './BufferWebSocketServer';
-import IPCServer from './IPCServer';
-import NetSocketServer from './NetSocketServer';
+import BufferWebSocketServer from './proxy/BufferWebSocketServer';
+import IPCServer from './proxy/IPCServer';
+import DirectNetSocketServer from './direct/DirectNetSocketServer';
 import Server from './Server';
-import WSS2Server from './WSS2Server';
-import WSSServer from './WSSServer';
-import WebSocketServer from './WebSocketServer';
+import WSS2Server from './direct/WSS2Server';
+import WSSServer from './direct/WSSServer';
+import WebSocketServer from './proxy/WebSocketServer';
+import ProxyNetSocketServer from './proxy/ProxyNetSocketServer';
 
 export default function createServer(type: ConnectionType): Server {
   switch (type) {
@@ -24,7 +25,10 @@ export default function createServer(type: ConnectionType): Server {
     case ConnectionType.WSS2:
       return new WSS2Server();
 
-    case ConnectionType.NetSocket:
-      return new NetSocketServer();
+    case ConnectionType.DirectNetSocket:
+      return new DirectNetSocketServer();
+
+    case ConnectionType.ProxyNetSocket:
+      return new ProxyNetSocketServer();
   }
 }

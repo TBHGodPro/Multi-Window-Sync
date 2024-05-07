@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron/renderer';
-import { Position } from '../../types';
-import BufferUtil from '../util/Buffer';
-import Client from './Client';
+import { Position } from '../../../types';
+import BufferUtil from '../../util/Buffer';
+import Client from '../Client';
 import { Server, Socket } from 'net';
 import { once } from 'events';
 
-export default class NetSocketClient extends Client {
+export default class DirectNetSocketClient extends Client {
   public server: Server;
   private lastPos: Position = { x: 0, y: 0 };
   public sockets: Map<number, Socket> = new Map();

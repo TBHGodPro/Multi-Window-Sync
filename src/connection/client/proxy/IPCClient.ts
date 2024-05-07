@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron/renderer';
-import { Position } from '../../types';
-import Client from './Client';
+import { Position } from '../../../types';
+import Client from '../Client';
 
 export default class IPCClient extends Client {
   public init(): void {

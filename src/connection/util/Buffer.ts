@@ -71,7 +71,7 @@ export default class BufferUtil {
         op: 'position',
         data: this.readMiniPosition(buf),
       };
-    else if (buf.length === 5)
+    else
       return {
         op: 'position',
         data: this.readPosition(buf),

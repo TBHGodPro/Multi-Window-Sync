@@ -1,5 +1,5 @@
-import { Position } from '../../types';
-import Server from './Server';
+import { Position } from '../../../types';
+import Server from '../Server';
 
 export default class WSS2Server extends Server {
   public init(): void {}

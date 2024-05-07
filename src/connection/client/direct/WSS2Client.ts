@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron/renderer';
-import { Position } from '../../types';
-import BufferUtil from '../util/Buffer';
-import Client from './Client';
+import { Position } from '../../../types';
+import BufferUtil from '../../util/Buffer';
+import Client from '../Client';
 import { WebSocketServer, WebSocket } from 'ws';
 
 export default class WSS2Client extends Client {

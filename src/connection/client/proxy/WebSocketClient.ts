@@ -1,12 +1,11 @@
-import { WS_HOST, WS_PORT } from '../../constants';
-import { Position } from '../../types';
-import BufferUtil from '../util/Buffer';
-import Client from './Client';
+import { WS_HOST, WS_PORT } from '../../../constants';
+import { Position } from '../../../types';
+import Client from '../Client';
 import { WebSocket } from 'ws';
 
-export default class BufferWebSocketClient extends Client {
+export default class WebSocketClient extends Client {
   public socket: WebSocket;
-  private queue: Buffer[] = [];
+  private queue: any[] = [];
 
   public init(): void {
     console.log(this.socket ? 'Reopening Socket...' : 'Opening Socket...');
@@ -17,16 +16,16 @@ export default class BufferWebSocketClient extends Client {
     });
 
     this.socket.on('message', raw => {
-      const data = BufferUtil.read(raw as Buffer);
+      const data = JSON.parse(raw.toString());
 
       switch (data.op) {
         case 'position': {
-          this.onPositionFunc(data.data.id, data.data.pos);
+          this.onPositionFunc(data.id, data.data);
           break;
         }
 
         case 'delete': {
-          this.onDeleteFunc(data.data.id);
+          this.onDeleteFunc(data.id);
           break;
         }
       }
@@ -47,7 +46,7 @@ export default class BufferWebSocketClient extends Client {
   }
 
   public sendMove(pos: Position): void {
-    const packet = BufferUtil.writePosition(this.id, pos);
+    const packet = JSON.stringify(pos);
     if (this.socket?.readyState === WebSocket.OPEN && this.queue.length === 0) this.socket.send(packet);
     else this.queue.push(packet);
   }

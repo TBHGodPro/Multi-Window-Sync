@@ -1,7 +1,7 @@
-import { Position } from '../../types';
-import Server from './Server';
+import { Position } from '../../../types';
+import Server from '../Server';
 import { WebSocketServer as WSS, WebSocket } from 'ws';
-import { WS_HOST, WS_PORT } from '../../constants';
+import { WS_HOST, WS_PORT } from '../../../constants';
 
 export default class WebSocketServer extends Server {
   public server: WSS;
@@ -14,7 +14,7 @@ export default class WebSocketServer extends Server {
     });
 
     this.server.on('connection', async (socket, req) => {
-      let started = Date.now();
+      const started = Date.now();
 
       let id = parseInt(req.headers['id'] as any);
       if (!this.windows.has(id)) {
@@ -44,7 +44,8 @@ export default class WebSocketServer extends Server {
       });
 
       socket.on('close', () => {
-        if (this.sockets.has(id)) this.sockets.delete(id);
+        this.sockets.delete(id);
+        socket.terminate();
       });
     });
   }
@@ -55,6 +56,9 @@ export default class WebSocketServer extends Server {
       await new Promise(res => setTimeout(res, 2));
     }
     const socket = this.sockets.get(id);
+    while (socket.readyState !== WebSocket.OPEN) {
+      await new Promise(res => setTimeout(res, 2));
+    }
     this.windows.forEach(win => {
       if (win.id != id) {
         const pos = win.win.getPosition();

@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
-import { Position } from '../../types';
-import Server from './Server';
+import { Position } from '../../../types';
+import Server from '../Server';
 
 export default class IPCServer extends Server {
   public init(): void {

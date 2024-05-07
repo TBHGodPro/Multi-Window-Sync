@@ -1,13 +1,13 @@
-import { Position } from '../../types';
-import Server from './Server';
+import { Position } from '../../../types';
+import Server from '../Server';
 
-export default class NetSocketServer extends Server {
+export default class WSSServer extends Server {
   public init(): void {}
 
   public supplyWindow(window: Electron.CrossProcessExports.BrowserWindow): void {
     const id = window.webContents.getProcessId();
     this.windows.forEach(win => {
-      //   win.win.webContents.send('id', id);
+      win.win.webContents.send('id', id);
       window.webContents.send('id', win.id);
     });
   }
