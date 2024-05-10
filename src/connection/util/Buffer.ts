@@ -102,6 +102,6 @@ export default class BufferUtil {
   }
 
   public writeDelete(): Buffer {
-    return Buffer.copyBytesFrom(this.buf, 0, 1);
+    return this.buf.subarray(0, 1);
   }
 }
