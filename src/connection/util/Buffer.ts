@@ -1,6 +1,7 @@
 import { Position } from '../../types';
 
 export default class BufferUtil {
+  // Static
   public static writePosition(id: number, pos: Position): Buffer {
     const buf = Buffer.alloc(5);
     buf.writeInt8(id, 0);
@@ -76,5 +77,31 @@ export default class BufferUtil {
         op: 'position',
         data: this.readPosition(buf),
       };
+  }
+
+  // Instance
+
+  public readonly buf: Buffer;
+
+  constructor(id: number) {
+    this.buf = Buffer.alloc(5);
+    this.buf.writeInt8(id, 0);
+  }
+
+  public writePosition(pos: Position): Buffer {
+    this.buf.writeUInt16BE(pos.x, 1);
+    this.buf.writeUInt16BE(pos.y, 3);
+    return this.buf;
+  }
+
+  public writeMiniPosition(pos: Position): Buffer {
+    const buf = Buffer.alloc(4);
+    buf.writeUInt16BE(pos.x, 0);
+    buf.writeUInt16BE(pos.y, 2);
+    return buf;
+  }
+
+  public writeDelete(): Buffer {
+    return Buffer.copyBytesFrom(this.buf, 0, 1);
   }
 }

@@ -8,7 +8,11 @@ export default class ProxyNetSocketClient extends Client {
   public socket: Socket;
   private queue: Buffer[] = [];
 
+  public writer: BufferUtil;
+
   public init(): void {
+    if (!this.writer) this.writer = new BufferUtil(this.id);
+
     console.log(this.socket ? 'Reopening Socket...' : 'Opening Socket...');
     this.socket = new Socket();
 
@@ -53,7 +57,7 @@ export default class ProxyNetSocketClient extends Client {
   }
 
   public sendMove(pos: Position): void {
-    const packet = BufferUtil.writePosition(this.id, pos);
+    const packet = this.writer.writePosition(pos);
     if (this.socket.readyState === 'open' && this.queue.length === 0) this.socket.write(packet);
     else this.queue.push(packet);
   }

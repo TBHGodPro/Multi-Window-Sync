@@ -10,7 +10,11 @@ export default class DirectNetSocketClient extends Client {
   private lastPos: Position = { x: 0, y: 0 };
   public sockets: Map<number, Socket> = new Map();
 
+  public writer: BufferUtil;
+
   public init(): void {
+    if (!this.writer) this.writer = new BufferUtil(this.id);
+
     this.server = new Server(async socket => {
       const idData = (await once(socket, 'data'))[0] as Buffer;
       const id = BufferUtil.readDelete(idData).id;
@@ -60,9 +64,9 @@ export default class DirectNetSocketClient extends Client {
 
         socket.on('ready', async () => {
           console.log(`Socket to ${id} Open (WS)`);
-          socket.write(BufferUtil.writeDelete(this.id));
+          socket.write(this.writer.writeDelete());
           await new Promise(res => setTimeout(res, 100));
-          socket.write(BufferUtil.writeMiniPosition(this.lastPos));
+          socket.write(this.writer.writeMiniPosition(this.lastPos));
         });
 
         socket.connect({
@@ -77,7 +81,7 @@ export default class DirectNetSocketClient extends Client {
   public sendMove(pos: Position): void {
     if (pos === this.lastPos) return;
     this.lastPos = pos;
-    const packet = BufferUtil.writeMiniPosition(pos);
+    const packet = this.writer.writeMiniPosition(pos);
     this.sockets.forEach(socket => socket.write(packet));
   }
 }
